@@ -1,24 +1,40 @@
-import logo from './logo.svg';
+import React,{useState} from 'react'
 import './App.css';
+import Header from './components/Layout/Header';
+import TshirtForm from './components/Tshirts/TshirtForm';
+import TshirtList from './components/Tshirts/TshirtList';
+import Cart from './components/Cart/Cart';
+import CartProvider from './store/CartProvider';
+
 
 function App() {
+  const[tshirtList,setTshirtList]=useState([])
+  const[isCartOpen,setIsCartOpen]=useState(false)
+
+  const cartOpenHandler=()=>{
+    setIsCartOpen(true);
+  }
+
+  const cartHideHandler=()=>{
+    setIsCartOpen(false)
+  }
+
+  
+
+  const tshirtListHandler=(data)=>{
+    const updatedList=[...tshirtList,data]
+    setTshirtList(updatedList)
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <CartProvider>
+      {isCartOpen && <Cart hideHandler={cartHideHandler}/>}
+      <Header showHandler={cartOpenHandler}/>
+      <div>
+      <TshirtForm onSaveData={tshirtListHandler} />
+      </div>
+      <TshirtList tshirts={tshirtList}/>
+    </CartProvider>
   );
 }
 
